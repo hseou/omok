@@ -34,18 +34,38 @@ function makeMove(row, col) {
 // 승자 확인
 function checkWinner(row, col) {
     const directions = [
-        [-1, 0], [1, 0], [0, -1], [0, 1], // 수직, 수평
-        [-1, -1], [1, 1], [-1, 1], [1, -1] // 대각선
+        [-1, 0], [1, 0], [0, -1], [0, 1], // vertical and horizontal
+        [-1, -1], [1, 1], [-1, 1], [1, -1] // diagonal
     ];
 
     for (const dir of directions) {
-        if (checkDirection(row, col, dir[0], dir[1]) + checkDirection(row, col, -dir[0], -dir[1]) >= 4) {
+        let count = 1;
+        let r = row + dir[0];
+        let c = col + dir[1];
+
+        while (r >= 0 && r < size && c >= 0 && c < size && document.getElementById("board").rows[r].cells[c].innerHTML === currentPlayer) {
+            count++;
+            r += dir[0];
+            c += dir[1];
+        }
+
+        r = row - dir[0];
+        c = col - dir[1];
+
+        while (r >= 0 && r < size && c >= 0 && c < size && document.getElementById("board").rows[r].cells[c].innerHTML === currentPlayer) {
+            count++;
+            r -= dir[0];
+            c -= dir[1];
+        }
+
+        if (count >= 5) {
             return true;
         }
     }
 
     return false;
 }
+
 
 // 한 방향으로의 돌 개수 확인
 function checkDirection(row, col, dirRow, dirCol) {
